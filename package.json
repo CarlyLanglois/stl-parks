@@ -5,7 +5,7 @@
   "private": true,
   "main": "main.js",
   "dependencies": {
-    "colormap": "^2.2.0",
+    "colormap": "^2.3.0",
     "ol": "^4.6.4",
     "ol-hashed": "^1.0.2",
     "ol-mapbox-style": "^2.6.1"
