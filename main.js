@@ -11,7 +11,11 @@ import Stroke from 'ol/style/stroke';
 import Style from 'ol/style/style';
 import sphere from 'ol/sphere';
 
-import colormap from 'colormap';
+//import colormap from 'colormap';
+
+import proj from 'ol/proj';
+import Overlay from 'ol/overlay';
+import coordinate from 'ol/coordinate';
 
 // add a basemap of the st louis area w/ osm bright styling. data from json file in app.
 const map = apply('map-container', './data/osm-basemap.json');
@@ -56,4 +60,30 @@ fetch('http://localhost:8080/geoserver/wfs', {
   // features.forEach(function(f){
   //   areas.push(sphere.getArea(f.getGeometry()));
   // });
+});
+
+var overlay = new Overlay({
+  element: document.getElementById('popup-container'),
+  positioning: 'bottom-center',
+  offset: [0, -10]
+});
+map.addOverlay(overlay);
+
+map.on('click', function(e) {
+  overlay.setPosition();
+  var features = map.getFeaturesAtPixel(e.pixel);
+  if (features) {
+    var coords = features[0].getGeometry().getCoordinates();
+    var feature = features[0];
+    var properties = feature.getProperties();
+    var geometry = feature.getGeometry();
+    var extent = geometry.getExtent();
+    var closestPoint = geometry.getClosestPoint([extent[0], extent[3]])
+    console.log(extent)
+    //console.log(properties.TEXT_)
+    //var hdms = coordinate.toStringHDMS(proj.toLonLat(coords));
+    overlay.getElement().innerHTML = properties.TEXT_;
+    //overlay.setPosition([extent[0], extent[3]]);
+    overlay.setPosition(closestPoint);
+  }
 });
